@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { register } from "./views/auth.js";
+import { register, login } from "./views/auth.js";
 import { saveRecipe } from "./views/recipes.js";
 import { jwtMiddleware } from "./util.js";
 const app = express();
