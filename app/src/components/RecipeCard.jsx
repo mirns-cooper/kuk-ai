@@ -1,15 +1,24 @@
 import useAuthStore from "../store/auth";
+import { saveRecipe } from "../services/api";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export function RecipeCard({ recipe, hasSave }) {
 
     const isLoggedIn = useAuthStore(state => !!state.user);
     const setAuthModal = useAuthStore(state => state.setAuthModal);
+    const [isSaved, setIsSaved] = useState(false);
 
-    function saveRecipe() {
+    function onSaveRecipe() {
         if (!isLoggedIn) {
             setAuthModal(true);
             return;
         }
+
+        saveRecipe(recipe).then(response => {
+            setIsSaved(true);
+            toast.info("Recipe is saved")
+          })
     }
 
     return (
@@ -51,9 +60,9 @@ export function RecipeCard({ recipe, hasSave }) {
                 </div>
             </div>
 
-            {hasSave ? (
+            {hasSave && !isSaved ? (
                 <div className="mt-6 pt-4 border-t border-white/10">
-                    <button className="save-button" onClick={saveRecipe}>
+                    <button className="save-button" onClick={onSaveRecipe}>
                         Save Recipe
                     </button>
                 </div>
