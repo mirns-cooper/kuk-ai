@@ -56,7 +56,7 @@ export async function saveRecipe({ title, ingredients, instructions, totalTime, 
 
 }
 
-export async function login() {
+export async function getRecipes() {
   const response = await api.post("api/v1/recipes");
   return response.data;
 }

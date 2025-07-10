@@ -1,12 +1,20 @@
 import { useState } from "react";
 import { RecipeCard } from "../components/RecipeCard";
+import Lottie from "lottie-react";
+import FryingPan from "../assets/fry.json";
 
 function Home() {
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [recipe, setRecipe] = useState(null);
 
-  function generateRecipe() {
+  async function generateRecipe() {
+    if (!prompt.trim() || isLoading) {
+      return;
+    }
+
+    setIsLoading(true)
+    await new Promise(r => setTimeout(r, 10000));
     setRecipe({
       title: "Title",
       ingredients: ["Rice", "Chicken"],
@@ -14,12 +22,25 @@ function Home() {
       totalTime: 20
     })
     setPrompt("");
+    setIsLoading(false);
   }
 
   return (
     <div className="min-h-screen pt-16 pb-20">
       <div className="max-w-5xl mx-auto px-6 py-8">
-        {!recipe ? (
+        {isLoading ? 
+          <div className="text-center mb-12 flex flex-col items-center justify-center">
+            <Lottie
+            animationData={FryingPan}
+            loop
+            className="w-60 h-60"
+            speed={1.5}
+            />
+            <span className="text-white-600 text-xl font-medium">
+                Your recipe is cooked...
+            </span>
+          </div>
+        :  !recipe ? (
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-red-900 to-black-900 bg-clip-text text-transparent">
               Welcome to KukAI
