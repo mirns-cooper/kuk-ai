@@ -1,4 +1,17 @@
+import useAuthStore from "../store/auth";
+
 export function RecipeCard({ recipe, hasSave }) {
+
+    const isLoggedIn = useAuthStore(state => !!state.user);
+    const setAuthModal = useAuthStore(state => state.setAuthModal);
+
+    function saveRecipe() {
+        if (!isLoggedIn) {
+            setAuthModal(true);
+            return;
+        }
+    }
+
     return (
         <div className="recipe-card">
             <div className="mb-4">
@@ -40,7 +53,7 @@ export function RecipeCard({ recipe, hasSave }) {
 
             {hasSave ? (
                 <div className="mt-6 pt-4 border-t border-white/10">
-                    <button className="save-button">
+                    <button className="save-button" onClick={saveRecipe}>
                         Save Recipe
                     </button>
                 </div>
