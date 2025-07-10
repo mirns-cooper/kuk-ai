@@ -5,11 +5,17 @@ import Saved from "./pages/Saved";
 import Header from "./components/Header";
 
 function App() {
-  return (    
-  <Router>
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-red-900">
-      <Header />
-      <main>
+  const [user, setUser] = useState(null);
+  const isLoggedIn = user != null;
+
+  return (
+    <Router>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-red-900">
+        <Header
+          user={user}
+          setUser={setUser}
+        />
+        <main>
           <Routes>
             <Route
               path="/"
@@ -20,9 +26,9 @@ function App() {
               element={<Saved />}
             />
           </Routes>
-      </main>
-    </div>
-  </Router>
+        </main>
+      </div>
+    </Router>
   );
 }
 
