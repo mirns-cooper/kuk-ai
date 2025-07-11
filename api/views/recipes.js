@@ -34,7 +34,7 @@ export async function getMyRecipes(req, res) {
         userId: req.user.id,
       },
       orderBy: {
-        createdAt: "desc",
+        createAt: "desc",
       },
     });
 
