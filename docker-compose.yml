@@ -24,6 +24,7 @@ services:
       NODE_ENV: development
       JWT_SECRET: "test123"
       DATABASE_URL: "postgresql://postgres:example@db:5432/postgres"
+      OLLAMA_URL: "http://ollama:11434/"
     stdin_open: true
     tty: true
     command: npm run dev
@@ -38,8 +39,19 @@ services:
     environment:
       POSTGRES_PASSWORD: example
     volumes:
-      - pgdata_15:/var/lib/postgresql/data 
- 
+      - pgdata_15:/var/lib/postgresql/data
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ./ai:/app/ai
+      - ./ollama-models:/root/.ollama
+    restart: unless-stopped
+    entrypoint: ["/bin/bash", "-c"]
+    command: 
+      - |
+        ollama serve
+
   adminer:
     image: adminer
     restart: always

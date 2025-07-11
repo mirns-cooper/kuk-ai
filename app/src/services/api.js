@@ -7,24 +7,25 @@ const api = axios.create({
   baseURL: API_BASE,
   timeout: 10000,
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
-api.interceptors.request.use(config => {
-  const token = useAuthStore.getState().token;
-  console.log(token)
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+api.interceptors.request.use(
+  (config) => {
+    const token = useAuthStore.getState().token;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
-  return config;
-}, error => Promise.reject(error)
+    return config;
+  },
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
-  response => response,
-  error => {
+  (response) => response,
+  (error) => {
     if (error.response?.status == 401) {
       useAuthStore.getState().logout();
     }
@@ -34,29 +35,46 @@ api.interceptors.response.use(
 
 export async function login({ email, password }) {
   const response = await api.post("api/v1/auth/login", {
-    email, password
-  })
+    email,
+    password,
+  });
   return response.data;
 }
-
 
 export async function register({ name, email, password }) {
   const response = await api.post("api/v1/auth/register", {
-    name, email, password
-  })
+    name,
+    email,
+    password,
+  });
   return response.data;
-
 }
 
-export async function saveRecipe({ title, ingredients, instructions, totalTime, }) {
+export async function saveRecipe({
+  title,
+  ingredients,
+  instructions,
+  totalTime,
+}) {
   const response = await api.post("api/v1/recipes", {
-    title, ingredients, instructions, totalTime
-  })
+    title,
+    ingredients,
+    instructions,
+    totalTime,
+  });
   return response.data;
-
 }
 
 export async function getRecipes() {
-  const response = await api.post("api/v1/recipes");
+  const response = await api.get("api/v1/recipes");
+  return response.data;
+}
+
+export async function aiGenerateRecipe({ prompt }) {
+  const response = await api.post("api/v1/ai/generate-recipe", {
+    prompt,
+  }, {
+    timeout: 420000,
+  });
   return response.data;
 }

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { RecipeCard } from "../components/RecipeCard";
 import Lottie from "lottie-react";
 import FryingPan from "../assets/fry.json";
+import { aiGenerateRecipe } from "../services/api";
+import { toast } from "react-toastify";
 
 function Home() {
   const [prompt, setPrompt] = useState("");
@@ -14,13 +16,19 @@ function Home() {
     }
 
     setIsLoading(true)
-    await new Promise(r => setTimeout(r, 10000));
-    setRecipe({
-      title: "Title",
-      ingredients: ["Rice", "Chicken"],
-      instructions: ["Just do it"],
-      totalTime: 20
-    })
+    try {
+      const aiRecipe = await aiGenerateRecipe({
+        prompt: prompt.trim()
+      });
+      setRecipe(aiRecipe.recipe);
+    } catch (error) {
+      if (error.response?.status == 422) {
+        toast.info("Invalid prompt!");
+      } else {
+        toast.info("Something went wrong")
+      }
+    }
+    
     setPrompt("");
     setIsLoading(false);
   }
